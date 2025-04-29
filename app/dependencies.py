@@ -10,8 +10,6 @@ from app.services.jwt_service import decode_token
 from settings.config import Settings
 from fastapi import Depends
 from uuid import UUID
-from app.schemas.user_schemas import UserProfileUpdate  # Import UserProfileUpdate schema
-
 
 def get_settings() -> Settings:
     """Return application settings."""
@@ -42,7 +40,7 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
     payload = decode_token(token)
     if payload is None:
         raise credentials_exception
-    user_id: str = payload.get("sub")
+    user_id: str = payload.get("id")
     user_role: str = payload.get("role")
     user_uuid: UUID = payload.get("user_id")
     if user_id is None or user_role is None:
@@ -55,12 +53,3 @@ def require_role(role: str):
             raise HTTPException(status_code=403, detail="Operation not permitted")
         return current_user
     return role_checker
-
-# New Dependency to update profile
-async def get_profile_update_data(profile_data: dict = Depends(UserProfileUpdate)):
-    """Dependency to validate and provide profile update data."""
-    try:
-        profile = UserProfileUpdate(**profile_data)  # Use the schema for validation
-        return profile
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=f"Invalid profile update data: {str(e)}")
