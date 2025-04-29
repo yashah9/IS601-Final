@@ -101,3 +101,4 @@ def test_upload_profile_picture_special_characters(mock_minio_client, mock_setti
     )
     expected_url = f"{mock_settings['MINIO_ENDPOINT']}/{bucket_name}/{file_name}"
     assert result_url == expected_url
+        
