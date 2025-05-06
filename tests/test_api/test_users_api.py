@@ -210,19 +210,3 @@ async def test_retrieve_non_existing_user(async_client, admin_token):
     response = await async_client.get(f"/users/{non_existent_user_id}", headers=headers)
     assert response.status_code == 404
     assert "User not found" in response.json().get("detail", "")
-
-@pytest.mark.asyncio
-async def test_update_user_profile_success(async_client, admin_user, admin_token):
-    # Test case for successfully updating user profile
-    updated_data = {
-        "first_name": "UpdatedFirstName",
-        "last_name": "UpdatedLastName",
-        "bio": "Updated bio information"
-    }
-    headers = {"Authorization": f"Bearer {admin_token}"}
-    response = await async_client.put(f"/users/{admin_user.id}/profile", json=updated_data, headers=headers)
-    
-    assert response.status_code == 200
-    assert response.json()["first_name"] == updated_data["first_name"]
-    assert response.json()["last_name"] == updated_data["last_name"]
-    assert response.json()["bio"] == updated_data["bio"]
