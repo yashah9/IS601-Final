@@ -88,6 +88,10 @@ Includes a Reflection Document for the course.
 ### [Minio Tests](https://github.com/yashah9/IS601-Final/blob/main/tests/test_minio.py)
 ### [User Role tests](https://github.com/yashah9/IS601-Final/blob/file-upload-testcase/tests/test_api/test_users_api.py)
 
+## Final Report
+[Link to report](https://docs.google.com/document/d/1i6nceZyJk_IJ1KxSrgse8WizR98XxTYEnV8c7nLSybM/edit?usp=sharing)
 
+## Docker Hub Deploy
+[Link to deployed project](https://hub.docker.com/r/yashshah0910/is601_final_api)
 ## Image on dockerhub
 <img width="1512" alt="image" src="https://github.com/user-attachments/assets/b17c865a-817f-433e-819e-5c7bf49baf16" />
