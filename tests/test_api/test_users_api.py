@@ -6,6 +6,7 @@ from app.models.user_model import User, UserRole
 from app.utils.nickname_gen import generate_nickname_with_id
 from app.utils.security import hash_password
 from app.services.jwt_service import decode_token  # Import your FastAPI app
+from urllib.parse import urlencode
 
 # Example of a test function using the async_client fixture
 @pytest.mark.asyncio
@@ -190,3 +191,38 @@ async def test_list_users_unauthorized(async_client, user_token):
         headers={"Authorization": f"Bearer {user_token}"}
     )
     assert response.status_code == 403  # Forbidden, as expected for regular user
+
+@pytest.mark.asyncio
+async def test_login_user_not_found(async_client):
+    form_data = {
+        "username": "nonexistentuser@here.edu",
+        "password": "DoesNotMatter123!"
+    }
+    response = await async_client.post("/login/", data=urlencode(form_data), headers={"Content-Type": "application/x-www-form-urlencoded"})
+    assert response.status_code == 401
+    assert "Incorrect email or password." in response.json().get("detail", "")
+
+@pytest.mark.asyncio
+async def test_retrieve_non_existing_user(async_client, admin_token):
+    # Trying to retrieve a non-existing user
+    non_existent_user_id = "00000000-0000-0000-0000-000000000000"
+    headers = {"Authorization": f"Bearer {admin_token}"}
+    response = await async_client.get(f"/users/{non_existent_user_id}", headers=headers)
+    assert response.status_code == 404
+    assert "User not found" in response.json().get("detail", "")
+
+@pytest.mark.asyncio
+async def test_update_user_profile_success(async_client, admin_user, admin_token):
+    # Test case for successfully updating user profile
+    updated_data = {
+        "first_name": "UpdatedFirstName",
+        "last_name": "UpdatedLastName",
+        "bio": "Updated bio information"
+    }
+    headers = {"Authorization": f"Bearer {admin_token}"}
+    response = await async_client.put(f"/users/{admin_user.id}/profile", json=updated_data, headers=headers)
+    
+    assert response.status_code == 200
+    assert response.json()["first_name"] == updated_data["first_name"]
+    assert response.json()["last_name"] == updated_data["last_name"]
+    assert response.json()["bio"] == updated_data["bio"]
