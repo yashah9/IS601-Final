@@ -2,9 +2,11 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - main
 
 
 jobs:
@@ -46,7 +48,8 @@ jobs:
           
       - name: Run tests with Pytest
         env:
-          DATABASE_URL: postgresql+asyncpg://user:password@postgres:5432/myappdb        run: pytest
+          DATABASE_URL: postgresql+asyncpg://user:password@localhost:5432/myappdb
+        run: pytest
 
   build-and-push-docker:
     needs: test
