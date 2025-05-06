@@ -8,6 +8,7 @@ from app.utils.security import hash_password
 from app.services.jwt_service import decode_token  # Import your FastAPI app
 from urllib.parse import urlencode
 
+
 # Example of a test function using the async_client fixture
 @pytest.mark.asyncio
 async def test_create_user_access_denied(async_client, user_token, email_service):
